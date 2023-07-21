@@ -1,5 +1,5 @@
 {
-  "name": "gitlab-mr",
+  "name": "gitlab-merge-request-creator",
   "version": "1.0.0",
   "description": "A simple tool which saves your time adding reviewers to the Gitlab Merge Requests",
   "main": "index.js",
