@@ -1,11 +1,14 @@
 import util from 'node:util';
 import { exec as execBase } from 'node:child_process';
+import { removeTrailingNewline } from './utility';
 
 type NamedArguments = Record<string, string>;
 
 type CommandOutput = {
   stdout: string;
   stderr: string;
+  code: number;
+  cmd: string;
 };
 
 function parseNamedArguments(): NamedArguments {
@@ -23,10 +26,11 @@ function parseNamedArguments(): NamedArguments {
 
 const exec = util.promisify(execBase);
 
-function printIfErrorAndExit({ stderr }: CommandOutput, errorCode: number) {
+function printIfErrorAndExit({ code, cmd, stderr }: CommandOutput) {
   if (stderr) {
-    console.error(stderr);
-    process.exit(errorCode);
+    const error = removeTrailingNewline(stderr);
+    console.error(`Command: "${cmd}".\nResult: "${error}"`);
+    process.exit(code);
   }
 }
 

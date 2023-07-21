@@ -3,16 +3,12 @@ import { extractProjectNameFromSshRepositoryURL, removeTrailingNewline } from '.
 
 export async function getLocalRepositoryInfo() {
   const sourceBranch = await exec('git branch --show-current')
-    .then(commandOutput => {
-      printIfErrorAndExit(commandOutput, -1);
-      return removeTrailingNewline(commandOutput.stdout);
-    });
+    .then(commandOutput => removeTrailingNewline(commandOutput.stdout))
+    .catch(err => printIfErrorAndExit(err) as unknown as string);
 
   const projectName = await exec('git remote get-url origin')
-    .then(commandOutput => {
-      printIfErrorAndExit(commandOutput, -2);
-      return extractProjectNameFromSshRepositoryURL(removeTrailingNewline(commandOutput.stdout));
-    });
+    .then(commandOutput => extractProjectNameFromSshRepositoryURL(removeTrailingNewline(commandOutput.stdout)))
+    .catch(err => printIfErrorAndExit(err) as unknown as string);
 
   return {
     sourceBranch,
