@@ -55,11 +55,11 @@ create-mr --title 'I am a title' --draft true
     ```
 4. Add an alias in you `.bashrc`/`.zshrc` to the script
     ```sh
-    echo "alias create-mr=\"npx ts-node $(pwd)/build/src/index.js\"" >> ~/.bashrc
+    echo "alias create-mr=\"node $(pwd)/build/src/index.js\"" >> ~/.bashrc
     ```
     or
     ```sh
-    echo "alias create-mr=\"npx ts-node $(pwd)/build/src/index.js\"" >> ~/.zshrc
+    echo "alias create-mr=\"node $(pwd)/build/src/index.js\"" >> ~/.zshrc
     ```
 5. Apply the changes to the current terminal session
     ```sh
