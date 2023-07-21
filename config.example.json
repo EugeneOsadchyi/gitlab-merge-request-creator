@@ -1,0 +1,6 @@
+{
+  "gitlabBaseURL": "REPLACE_ME",
+  "personalAccessToken": "REPLACE_ME",
+  "approvalRuleName": "REPLACE_ME",
+  "targetBranch": "REPLACE_ME"
+}
