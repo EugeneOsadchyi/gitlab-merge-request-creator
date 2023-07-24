@@ -6,7 +6,7 @@ import GitlabApi from './lib/gitlabApi';
 
 (async () => {
   const { projectName, sourceBranch } = await getLocalRepositoryInfo();
-  const { title, description, draft: isDraft } = parseNamedArguments();
+  const { title, description, draft: isDraft = true } = parseNamedArguments();
 
   const gitlabApiClient = new GitlabApi(config.gitlabBaseURL, config.personalAccessToken);
 
