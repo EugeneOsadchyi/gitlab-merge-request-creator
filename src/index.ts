@@ -17,7 +17,7 @@ import GitlabApi from './lib/gitlabApi';
     description,
     sourceBranch,
     targetBranch: config.targetBranch,
-    approvalRuleName: config.approvalRuleName,
+    approvalRules: config.approvalRules,
     isDraft: Boolean(isDraft),
   })
 })()

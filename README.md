@@ -41,7 +41,9 @@ create-mr --title 'I am a title' --draft true
     {
       "gitlabBaseURL": "https://gitlab.com/api",
       "personalAccessToken": "1234567890",
-      "approvalRuleName": "Team Sunrisers",
+      "approvalRuleName": [
+        "Team Sunrisers"
+      ],
       "targetBranch": "develop"
     }
     ```

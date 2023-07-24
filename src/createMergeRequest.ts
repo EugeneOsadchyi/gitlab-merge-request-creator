@@ -3,7 +3,7 @@ import GitlabApi from './lib/gitlabApi';
 async function main({
   gitlabApiClient,
   projectName,
-  approvalRuleName,
+  approvalRules,
   title,
   description,
   sourceBranch,
@@ -12,7 +12,7 @@ async function main({
 }: {
   gitlabApiClient: GitlabApi;
   projectName: string;
-  approvalRuleName: string;
+  approvalRules: string[];
   title: string;
   description?: string;
   sourceBranch: string;
@@ -20,7 +20,7 @@ async function main({
   isDraft?: boolean;
 }) {
   const project = await getProjectByName(gitlabApiClient, projectName);
-  const reviewerIds = await getMergeRequestReviewerIds(gitlabApiClient, project.id, approvalRuleName);
+  const reviewerIds = await getMergeRequestReviewerIds(gitlabApiClient, project.id, approvalRules);
   const assigneeIds = await getMergeRequestAssigneeIds(gitlabApiClient);
 
   const mergeRequest = await createMergeRequest(gitlabApiClient, {
@@ -33,6 +33,11 @@ async function main({
     targetBranch,
     isDraft,
   });
+
+  if (mergeRequest.message) {
+    console.error(mergeRequest);
+    process.exit(1);
+  }
 
   console.log(mergeRequest.web_url);
 }
@@ -57,9 +62,13 @@ async function getEligibleApproverIds(client: GitlabApi, projectId: number, rule
   return rule['eligible_approvers'].map((app: { id: number; }) => app.id);
 }
 
-async function getMergeRequestReviewerIds(client: GitlabApi, projectId: number, ruleName: string): Promise<number[]> {
+async function getMergeRequestReviewerIds(client: GitlabApi, projectId: number, approvalRules: string[]): Promise<number[]> {
   const currentUser = await client.currentUser();
-  const eligibleApprovers = await getEligibleApproverIds(client, projectId, ruleName);
+  const eligibleApprovers = await Promise.all(
+    approvalRules.map(rule => getEligibleApproverIds(client, projectId, rule)
+  ))
+    .then(results => ([] as number[]).concat.apply([], results))
+    .then(results => Array.from(new Set(results)));
 
   return eligibleApprovers.filter((id: number) => id !== currentUser.id);
 }
